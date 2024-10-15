@@ -5,12 +5,14 @@ from tkinter import PhotoImage
 import sounddevice as sd
 import wavio as wv
 from scipy.io.wavfile import write
-
+import main
+import urllib.request
+import webbrowser
 
 
 mood = 0
-
-# function for color change
+url = "https://open.spotify.com/"
+# function for color change #not necessery only if wanted
 def colorchange ():
     global mood
     if mood > 3:
@@ -49,6 +51,9 @@ def record():
     # convert the numpy array to an audio file.
     wv.write("recording1.wav", recording, freq, sampwidth=2)
     
+def open_spotify():
+    webbrowser.open_new_tab("https://open.spotify.com/genre/section0JQ5DACFo5h0jxzOyHOsIc")
+    
 
 # initialise app-window
 # main window
@@ -62,14 +67,18 @@ window.configure(bg='#5696b8')
 menu = tk.Menu(window)
 
 # sub-menu
-file_menu = tk.Menu(menu, tearoff=False)
-file_menu.add_command(label="New", command=lambda: print('New file'))
-file_menu.add_command(label="Open", command=lambda: print('Open file'))
-menu.add_cascade(label='File', menu=file_menu)
+link_menu = tk.Menu(menu, tearoff=False)
+link_menu.add_command(label="Link Spotify", command=main.link_spotify) # open seperate window for spotify credentials.
+link_menu.add_command(label="Open Spotify", command=open_spotify)
+menu.add_cascade(label='Link', menu=link_menu)
 
 # another sub-menu
 about_menu = tk.Menu(menu, tearoff=False)
-about_menu.add_command(label="About us", command=lambda: print('This project was created by \nDavid Norman. \nMing Fondberg. \nMuhannad Naser. \nParsan Amani '))
+about_menu.add_command(label='About Us', command=lambda: print('This project was created by '
+                                                               '\nDavid Norman.'
+                                                               '\nMing Fondberg.' 
+                                                               '\nMuhannad Naser.' 
+                                                               '\nParsan Amani '))
 menu.add_cascade(label="About", menu=about_menu)
 
 window.configure(menu=menu)
