@@ -5,31 +5,25 @@ from tkinter import PhotoImage
 import sounddevice as sd
 import wavio as wv
 from scipy.io.wavfile import write
-import main
-import urllib.request
+import pipeline
 import webbrowser
 
 
-mood = 0
-url = "https://open.spotify.com/"
+mood = "neutral"
 # function for color change #not necessery only if wanted
 def colorchange ():
     global mood
-    if mood > 3:
-        mood = 0
-
-    mood += 1
-    if mood == 1:
-        window.configure(bg='green')
+    if mood == "happy":
+        window.configure(bg='#0c8b45')
     
-    elif mood == 2:
-        window.configure(bg='red')
+    elif mood == "sad":
+        window.configure(bg='#ff3000')
     
-    elif mood == 3:
-        window.configure(bg='blue')
+    elif mood == "angry":
+        window.configure(bg='#000e80')
     
     else:
-        window.configure(bg='#5696b8')
+        window.configure(bg='#818181')
 
 # function to record audio
 def record():
@@ -60,16 +54,17 @@ def open_spotify():
 window = tk.Tk()
 window.title('Demo')
 window.geometry('360x800')
-window.configure(bg='#5696b8')
-
+window.configure(bg='#818181')
+icon = PhotoImage(file="./ds.png")
+window.iconphoto(False, icon)
 
 # menu
 menu = tk.Menu(window)
 
 # sub-menu
 link_menu = tk.Menu(menu, tearoff=False)
-link_menu.add_command(label="Link Spotify", command=main.link_spotify) # open seperate window for spotify credentials.
-link_menu.add_command(label="Open Spotify", command=open_spotify)
+link_menu.add_command(label="Link Spotify", command=lambda: webbrowser.open("https://www.spotify.com/account/overview/")) # open seperate window for spotify credentials.
+link_menu.add_command(label="Open Spotify", command=lambda: webbrowser.open_new_tab("https://open.spotify.com/genre/section0JQ5DACFo5h0jxzOyHOsIc"))
 menu.add_cascade(label='Link', menu=link_menu)
 
 # another sub-menu
@@ -83,37 +78,32 @@ menu.add_cascade(label="About", menu=about_menu)
 
 window.configure(menu=menu)
 
-
 # title
 title_lable = ttk.Label(master=window,
                         text='Emotion detection',
                         font='Calibri 24',
-                        background='#5696b8',
+                        background='#818181',
                         foreground='black')
 title_lable.pack()
 
-# importing special button-image
-#rec_button = PhotoImage('record-icon.jpg', height=75, width=75)
 
 # output field
 output_frame = ttk.Frame(master=window)
-output_window = tk.Text(master=output_frame, background='#1d4b63')
 
+# output widgets
+output_window = tk.Text(master=output_frame, background='#818181')
 output_window.pack()
 output_frame.pack()
 
 # input field
 input_frame = ttk.Frame(master=window)
 
-#button = ttk.Button(master=input_frame, image='record-icon.jpg')
+# input widgets
 mood_btn = ttk.Button(master=input_frame, text='cycle', command=colorchange)
 button = ttk.Button(master=input_frame, text='record', underline=False, command=record)
 mood_btn.pack(side='left')
 button.pack(side='left')
 input_frame.pack(pady=10, anchor='center', expand=True)
-
-
-# color change
 
 
 # mainloop
